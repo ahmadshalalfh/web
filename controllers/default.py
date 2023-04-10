@@ -5,9 +5,12 @@
 # -------------------------------------------------------------------------
 
 # ---- example index page ----
+@auth.requires_login()
 def index():
-    response.flash = T("Hello World")
-    return dict(message=T('Welcome to web2py!'))
+   courses = db.executesql("SELECT * FROM courses  " , as_dict=True)
+
+
+   return dict(courses = courses)
 
 # ---- API (example) -----
 @auth.requires_login()
@@ -16,35 +19,17 @@ def api_get_user_email():
     return response.json({'status':'success', 'email':auth.user.email})
 
 # ---- Smart Grid (example) -----
+@auth.requires_membership('admin') # can only be accessed by members of admin groupd
+def grid():
+    response.view = 'generic.html' # use a generic view
+    tablename = request.args(0)
+    if not tablename in db.tables: raise HTTP(403)
+    grid = SQLFORM.smartgrid(db[tablename], args=[tablename], deletable=False, editable=False)
+    return dict(grid=grid)
+
+# ---- Embedded wiki (example) ----
 
 
-def reg():
-
-
-    if request.vars['first']:
-      first = request.vars['first']
-      last = request.vars['last']
-      email = request.vars['email']
-      password = request.vars['password']
-      registration_key = request.vars['registration_key']
-
-
-      db.executesql("INSERT INTO student (  first_name,last_name, email,password , registration_key) VALUES (%s, %s , %s, %s ,%s)", placeholders=( first,last, email,password , registration_key))
-
-      redirect(URL('default', 'user'))
-
-    else:
-
-
-     return locals()
-
-@auth.requires_login()
-def userp():
-
-   courses = db.executesql("SELECT * FROM courses  " , as_dict=True)
-
-
-   return dict(courses = courses)
 
 
 def courses():
@@ -61,17 +46,6 @@ def courses():
          name = request.vars['instructor']
          courses = db.executesql("SELECT * FROM courses WHERE course_code=" + name, as_dict=True)
          return dict(courses=courses )
-
-
-@auth.requires_membership('admin') # can only be accessed by members of admin groupd
-def grid():
-    response.view = 'generic.html' # use a generic view
-    tablename = request.args(0)
-    if not tablename in db.tables: raise HTTP(403)
-    grid = SQLFORM.smartgrid(db[tablename], args=[tablename], deletable=False, editable=False)
-    return dict(grid=grid)
-
-# ---- Embedded wiki (example) ----
 def wiki():
     auth.wikimenu() # add the wiki to the menu
     return auth.wiki() 
