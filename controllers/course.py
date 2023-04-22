@@ -14,7 +14,7 @@ def copy_selected_rows(form ):
       selected_ids = request.vars._select
       for id in selected_ids:
                 row = db.mytable(id)
-                db.student_schedules.insert(
+                db.student_schedules.insert(schedule_id=None,
                                        days=row.days,
                                        start_time = row.start_time,
                                        end_time = row.end_time,
