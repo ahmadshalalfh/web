@@ -11,16 +11,14 @@ def incourse():
 
     return dict(form=form)
 def copy_selected_rows(form ):
-      selected_ids = request.vars._select
-      for id in selected_ids:
-                row = db.mytable(id)
+      for id in form:
+                row = db.courseschedules(id)
                 db.student_schedules.insert(schedule_id=None,
                                        days=row.days,
                                        start_time = row.start_time,
                                        end_time = row.end_time,
                                        room_no = row.room_no)
-                grid.elements('input[type=submit]')[0]['_onclick'] = "return ajax('copy_selected_rows', ['" + grid._id + "'], ':eval')"
-
+               
 
 @auth.requires_login()
 def schedules():
