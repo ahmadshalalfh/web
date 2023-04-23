@@ -18,19 +18,31 @@ db.define_table('courseschedules',
     Field('start_time', 'time'),
     Field('end_time', 'time', ),
     Field('room_no', 'string'),
+    Field('numper_of_student','integer'),
     Field('cabasety', 'int'),
-
-
-   primarykey =['schedule_id']
+    Field('course_code', 'string','reference courses', requires=IS_IN_DB(db,'courses.course_code','%(course_code)s')),
+    primarykey =['schedule_id']
    )
 db.define_table('studentchedules',
-    Field('schedule_id', 'integer', required=True , notnull = True),
+    Field('schedual_id', 'integer', required=True , notnull = True),
+    Field('id', 'integer', required=True , notnull = True),
     Field('days', 'string'),
     Field('start_time', 'time'),
     Field('end_time', 'time', ),
-    Field('room_no', 'string'),
-    Field('cabasety', 'int'),
+    Field('room_num', 'string'),
+    Field('course_schedual','integer'),
 
-   primarykey =['schedule_id']
+   primarykey =['schedual_id']
    )
+db.define_table('studentsregs',
+    Field('id','integer'),
+    Field('student_id','integer'),
+    Field('course_code','string'),
+    primarykey =['id']
+
+
+
+
+
+                )
 
