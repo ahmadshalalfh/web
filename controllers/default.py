@@ -7,11 +7,10 @@
 # ---- example index page ----
 @auth.requires_login()
 def index():
-   courses = db.executesql("SELECT * FROM courses  " , as_dict=True)
+  
 
 
-   return dict(courses = courses)
-
+   return locals()
 # ---- API (example) -----
 @auth.requires_login()
 def api_get_user_email():
