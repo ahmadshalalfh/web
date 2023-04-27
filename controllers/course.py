@@ -13,24 +13,32 @@ def incourse():
 def copy_selected_rows(form ):
 
       student_id = auth.user.id
+
       try:
 
-           for id in form:
-            row = db.courseschedules(id)
-            if row.numper_of_student != row.cabasety:
-                    db.studentchedules.insert(schedual_id=None,
-                                              course_schedual=row.schedule_id,
-                                           id=student_id,
-                                           days=row.days,
-                                           start_time = row.start_time,
-                                           end_time = row.end_time,
-                                           room_num = row.room_no)
+            for id in form:
+                 row = db.courseschedules(id)
+                 days = db(db.studentchedules.days == row.days).select()
+                 start_time = db(db.studentchedules.start_time == row.start_time).select()
 
 
-                    db(db.courseschedules.schedule_id==row.schedule_id).update(numper_of_student=row.numper_of_student + 1)
+                 if days  and start_time :
+                     return locals()
+                 else:
+                   if row.numper_of_student != row.cabasety:
+                     db.studentchedules.insert(schedual_id=None,
+                                                      course_schedual=row.schedule_id,
+                                                   id=student_id,
+                                                   days=row.days,
+                                                   start_time = row.start_time,
+                                                   end_time = row.end_time,
+                                                   room_num = row.room_no)
+
+
+                     db(db.courseschedules.schedule_id==row.schedule_id).update(numper_of_student=row.numper_of_student + 1)
             response.flash='تم الحفظ'
       except Exception:
-       response.flash='يوجد تعارض في الجدول'
+            response.flash='يوجد تعارض في الجدول'
 
 
 
